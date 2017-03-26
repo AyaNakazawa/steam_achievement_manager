@@ -11,29 +11,44 @@
   </head>
   <body>
     <header class="container-fluid">
-      <a href="#">Steam Achievement Manager</a>
+      <h1><a href="#">Steam Achievement Manager</a></h1>
     </header>
     <div class="container-fluid main">
-      <div class="xml-search-form">
-        <div class="form-group xml-profilename-text">
-          <input type="text" name="username" placeholder="Please enter Profile Name" class="form-control">
+      <div class="xml-search-area">
+        <div class="xml-search-form">
+          <div class="form-group xml-profilename-text">
+            <input type="text" name="profilename" placeholder="Please enter Profile Name" class="form-control">
+          </div>
+          <div class="form-group xml-appname-text">
+            <input type="text" name="appname" placeholder="Please enter Game Name" class="form-control">
+          </div>
+          <div class="form-group xml-search-button">
+            <button type="button" name="xml-search-submit" class="btn btn-primary">Search</button>
+          </div>
         </div>
-        <div class="form-group xml-appname-text">
-          <input type="text" name="gamename" placeholder="Please enter Game Name" class="form-control">
+      </div>
+      <div class="achievement-area">
+        <div class="achievement-search-area">
+          <div class="input-group achievement-search-form">
+            <span class="achievement-search-text">
+              <input type="text" name="achievement-search" placeholder="Search achievements" class="form-control">
+            </span>
+          	<span class="input-group-btn achievement-search-button">
+              <button type="button" name="achievement-search-submit" class="btn btn-default">Search</button>
+          	</span>
+          </div>
         </div>
-        <div class="form-group xml-search-button">
-          <button type="button" name="xml-search-submit" class="btn btn-primary">Search</button>
+        <div class="achievement-list-area">
         </div>
       </div>
     </div>
     <footer class="container-fluid">
       <p>
-        © 2017 <a href="https://github.com/AyaNakazawa/steam_achievement_manager">Steam Achievement Manager</a> @ <a href="https://github.com/AyaNakazawa/" alt="Aya Nakazawa Github">Aya Nakazawa</a>
+        © 2017 <a href="https://github.com/AyaNakazawa/steam_achievement_manager" target="_blank">Steam Achievement Manager</a> @ <a href="https://github.com/AyaNakazawa/" alt="Aya Nakazawa Github" target="_blank">Aya Nakazawa</a>
       </p>
     </footer>
-    <div class="container-fluid debug">
-      
-    </div>
+    <div class="container-fluid debug"></div>
+    
     <script src="js/jquery-3.2.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/myscript.js"></script>
