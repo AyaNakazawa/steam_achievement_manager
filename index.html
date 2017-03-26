@@ -10,18 +10,30 @@
     <link href="css/mystyle.css" rel="stylesheet">
   </head>
   <body>
-    <div class="container">
-      header
-    </div>
-    <div class="container">
-      main
-    </div>
-    <footer class="footer">
-      <div class="container">
-        <p class="text-muted">aya nakazawa 2017</p>
+    <header class="container-fluid">
+      <a href="#">Steam Achievement Manager</a>
+    </header>
+    <div class="container-fluid main">
+      <div class="xml-search-form">
+        <div class="form-group xml-profilename-text">
+          <input type="text" name="username" placeholder="Please enter Profile Name" class="form-control">
+        </div>
+        <div class="form-group xml-appname-text">
+          <input type="text" name="gamename" placeholder="Please enter Game Name" class="form-control">
+        </div>
+        <div class="form-group xml-search-button">
+          <button type="button" name="xml-search-submit" class="btn btn-primary">Search</button>
+        </div>
       </div>
+    </div>
+    <footer class="container-fluid">
+      <p>
+        © 2017 <a href="https://github.com/AyaNakazawa/steam_achievement_manager">Steam Achievement Manager</a> @ <a href="https://github.com/AyaNakazawa/" alt="Aya Nakazawa Github">Aya Nakazawa</a>
+      </p>
     </footer>
-    
+    <div class="container-fluid debug">
+      
+    </div>
     <script src="js/jquery-3.2.0.js"></script>
     <script src="js/bootstrap.min.js"></script>
     <script src="js/myscript.js"></script>

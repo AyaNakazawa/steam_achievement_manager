@@ -1,1 +1,104 @@
 @charset "utf-8";
+
+/* common */
+
+body {
+  font-size: 14px;
+  font-family: Verdana, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: white;
+  background: #1b2838;
+}
+
+a {
+  color: #C6D4DF;
+}
+a:hover {
+  text-decoration: none;
+  color: #E6F4FF;
+}
+
+/* header */
+
+header {
+  text-align: center;
+  font-size: 28px;
+  /*font-weight: bold;*/
+  
+  background: #171a21;
+  
+  padding: 20px 0;
+}
+
+/* main */
+
+.main {
+  width: 90%;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+.xml-search-form {
+  width: 90%;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.xml-search-button {
+  text-align: right;
+}
+
+/* footer */
+
+footer {
+  text-align: center;
+  color: #8F98A0;
+}
+
+/* medium */
+
+@media (min-width: 585px) {
+
+  .xml-search-form > .form-group {
+    display: inline-block;
+  }
+  
+  .xml-search-form > .xml-profilename-text, .xml-search-form > .xml-appname-text {
+    width: 40%;
+  }
+
+}
+
+/* large */
+
+@media (min-width: 820px) {
+
+  .xml-search-form {
+    width: 640px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+}
+
+/* debug */
+
+.debug {
+  text-align: center;
+}
+
+.debug:after {
+  content: 'mini';
+}
+
+@media (min-width: 585px) {
+  .debug:after {
+    content: 'midium';
+  }
+}
+@media (min-width: 820px) {
+  .debug:after {
+    content: 'large';
+  }
+}
