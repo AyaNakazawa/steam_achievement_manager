@@ -38,10 +38,10 @@
           <div class="data-error">
           </div>
           <div class="form-group data-profilename-text">
-            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="memoriamtk">
+            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control">
           </div>
           <div class="form-group data-appname-text">
-            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="aaa">
+            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control">
           </div>
           <div class="form-group data-search-button">
             <button type="button" id="data-search-submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>

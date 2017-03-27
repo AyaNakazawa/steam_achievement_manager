@@ -35,11 +35,17 @@ $(function() {
       console.log("data search start");
       
       $.get('php/getUserXML.php', {profilename:profilename}, function(data){
-        console.log(data);
+        // console.log(data);
+        
+        var userIconFileList = $(data).find("avatarMedium");
+        var userIconFilePath = $(userIconFileList[0]).text();
+        
+        console.log(userIconFilePath);
+        $(".achievement-usericon").attr("src", userIconFilePath);
       });
       
       $.get('php/getAchievementXML.php', {profilename:profilename, appname:appname}, function(data){
-        console.log(data);
+        // console.log(data);
       });
       
     } else {
