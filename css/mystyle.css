@@ -31,9 +31,15 @@ header {
   
   background: #171a21;
   
-  padding: 20px 0;
-  
-  border-radius: 0 0 8px 8px;
+  padding: 20px 0 0;
+}
+
+/* navbar */
+
+.navbar {
+  background: #171a21;
+  border-radius: 0;
+  border: 0;
 }
 
 /* main */
@@ -44,15 +50,23 @@ header {
   padding: 30px 0;
 }
 
-.main > .xml-search-area {
-  width: 90%;
+/* data-search */
+
+.main > .data-search-area {
+  width: 100%;
   margin: 0 auto;
   text-align: center;
 }
 
-.main > .xml-search-area > .xml-search-form > .xml-search-button {
+.main > .data-search-area > .data-search-form > .data-error {
+  text-align: left;
+}
+
+.main > .data-search-area > .data-search-form > .data-search-button {
   text-align: right;
 }
+
+/* achievement */
 
 .main > .achievement-area {
   background: #171a21;
@@ -71,17 +85,20 @@ header {
   overflow: auto;
 }
 
-.main > .achievement-area > .achievement-info-area > img {
+.main > .achievement-area > .achievement-info-area > .achievement-appicon {
+	float: left;
   width: 184px;
   height: 69px;
 }
 
 .main > .achievement-area > .achievement-info-area > .achievement-top {
-	float: right;
+	float: left;
 	width: 100%;
   
-	margin-left: -194px;
-	padding-left: 194px;
+	margin-left: -184px;
+	padding-left: 184px;
+	margin-right: -64px;
+	padding-right: 64px;
 	box-sizing: border-box;
 }
 
@@ -94,6 +111,13 @@ header {
 .main > .achievement-area > .achievement-info-area > .achievement-top > .achievement-profilename {
   color: #898989;
   margin: 0;
+}
+
+.main > .achievement-area > .achievement-info-area > .achievement-usericon {
+  float: left;
+  margin-top: 2px;
+  width: 64px;
+  height: 64px;
 }
 
 /* achievement-search */
@@ -144,8 +168,8 @@ header {
 	float: right;
 	width: 100%;
   
-	margin-left: -74px;
-	padding-left: 74px;
+	margin-left: -64px;
+	padding-left: 64px;
 	box-sizing: border-box;
 }
 
@@ -196,6 +220,25 @@ header {
   cursor: pointer;
 }
 
+.main > .pagetop {
+  background: #171a21;
+  width: 100px;
+  height: 38px;
+  line-height: 46px;
+  text-align: center;
+  float: right;
+  position: relative;
+  top: -8px;
+  right: 0;
+  
+  border-radius: 0 0 8px 8px;
+}
+
+.achievement-search-text {
+  border-radius: 2px;
+  background: pink;
+}
+
 /* footer */
 
 footer {
@@ -203,15 +246,24 @@ footer {
   color: #8F98A0;
 }
 
+.pagetop {
+  text-align: right;
+  margin: 0 auto;
+}
+ 
+.pagetop a {
+  display: inline-block;
+}
+
 /* medium */
 
 @media (min-width: 585px) {
 
-  .main > .xml-search-area > .xml-search-form > .form-group {
+  .main > .data-search-area > .data-search-form > .form-group {
     display: inline-block;
   }
   
-  .main > .xml-search-area > .xml-search-form > .xml-profilename-text, .main > .xml-search-area > .xml-search-form > .xml-appname-text {
+  .main > .data-search-area > .data-search-form > .data-profilename-text, .main > .data-search-area > .data-search-form > .data-appname-text {
     width: 40%;
   }
 
@@ -221,8 +273,13 @@ footer {
 
 @media (min-width: 820px) {
   
-  .main > .xml-search-area > .xml-search-form > .xml-profilename-text, .main > .xml-search-area > .xml-search-form > .xml-appname-text {
+  .main > .data-search-area > .data-search-form > .data-profilename-text, .main > .data-search-area > .data-search-form > .data-appname-text {
     width: 266px;
+  }
+  
+  .data-error {
+    width: 680px;
+    margin: 0 auto;
   }
   
   .main > .achievement-area > .achievement-search-area > .achievement-search-form {

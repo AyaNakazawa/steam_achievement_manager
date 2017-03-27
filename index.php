@@ -10,20 +10,41 @@
     <link href="css/mystyle.css" rel="stylesheet">
   </head>
   <body>
-    <header class="container-fluid">
+    <header class="container-fluid" id="top">
       <h1><a href="#">Steam Achievement Manager</a></h1>
     </header>
+    <nav class="navbar navbar-inverse">
+    	<div class="container-fluid">
+    		<div class="navbar-header">
+    			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarEexample1">
+    				<span class="sr-only">Toggle navigation</span>
+    				<span class="icon-bar"></span>
+    				<span class="icon-bar"></span>
+    				<span class="icon-bar"></span>
+    			</button>
+    		</div>
+    		
+    		<div class="collapse navbar-collapse" id="navbarEexample1">
+    			<ul class="nav navbar-nav">
+    				<li><a href="#">Reset</a></li>
+    				<li><a href="#">History</a></li>
+    			</ul>
+    		</div>
+    	</div>
+    </nav>
     <div class="container-fluid main">
-      <div class="xml-search-area">
-        <div class="xml-search-form">
-          <div class="form-group xml-profilename-text">
-            <input type="text" name="profilename" placeholder="Please enter Profile Name" class="form-control">
+      <div class="data-search-area">
+        <div class="data-search-form">
+          <div class="data-error">
           </div>
-          <div class="form-group xml-appname-text">
-            <input type="text" name="appname" placeholder="Please enter Game Name" class="form-control">
+          <div class="form-group data-profilename-text">
+            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="memoriamtk">
           </div>
-          <div class="form-group xml-search-button">
-            <button type="button" name="xml-search-submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
+          <div class="form-group data-appname-text">
+            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="aaa">
+          </div>
+          <div class="form-group data-search-button">
+            <button type="button" id="data-search-submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
           </div>
         </div>
       </div>
@@ -34,14 +55,15 @@
             <h2 class="achievement-appname">Game name</h3>
             <p class="achievement-profilename">User name</p>
           </div>
+          <img src="img/test_user.jpg" alt="user icon" class="achievement-usericon">
         </div>
         <div class="achievement-search-area">
           <div class="input-group achievement-search-form">
             <span class="achievement-search-text">
-              <input type="text" name="achievement-search" placeholder="Search achievements" class="form-control">
+              <input type="text" id="achievement-search" placeholder="Search achievements" class="form-control">
             </span>
           	<span class="input-group-btn achievement-search-button">
-              <button type="button" name="achievement-search-submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button>
+              <button type="button" id="achievement-search-submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button>
           	</span>
           </div>
         </div>
@@ -132,6 +154,7 @@
           </div>
         </div>
       </div>
+      <div class="pagetop"><a href="#top">PAGE TOP</a></div>
     </div>
     <footer class="container-fluid">
       <p>
