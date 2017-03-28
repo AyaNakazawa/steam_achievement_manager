@@ -1,20 +1,21 @@
+
 <?php
 
 $profilename = $_GET['profilename'];
 
 // 受け取った profilename からxmlを取得
-$steamProfileXMLUrl = "http://steamcommunity.com/id/" . $profilename . "/?xml=1";
+$steamProfileXMLUrl = 'http://steamcommunity.com/id/' . $profilename . '/?xml=1';
 $steamProfileXML = file_get_contents($steamProfileXMLUrl);
 
 // XMLとして読み込む
 $parseXML = new SimpleXMLElement($steamProfileXML, LIBXML_NOCDATA);
 
-// アバターのパスだけ取得
+// profile画像のパスだけ取得
 $userIconUrl = $parseXML->avatarMedium;
 
-// アバターのファイル名とパス
+// profile画像のファイル名とパス
 $userIconFileName = pathinfo($userIconUrl, PATHINFO_BASENAME);
-$userIconFilePath = "../img/" . $userIconFileName;
+$userIconFilePath = '../img/' . $userIconFileName;
 
 // imgフォルダにないときはDL
 if (!file_exists($userIconFilePath)) {
@@ -22,8 +23,10 @@ if (!file_exists($userIconFilePath)) {
   file_put_contents($userIconFilePath, $userIcon);
 }
 
-// アバターのパスをルートから見たサーバ内に変更する
+// profile画像のパスをルートから見たサーバ内に変更する
 $parseXML->avatarMedium = 'img/' . $userIconFileName;
 
+// 出力
 echo $parseXML->asXML();
+
 ?>

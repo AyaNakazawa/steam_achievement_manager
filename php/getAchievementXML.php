@@ -1,31 +1,38 @@
+
 <?php
 
 $profilename = $_GET['profilename'];
 $appname = $_GET['appname'];
 
 // 受け取った profilename と appname からxmlを取得
-$steamProfileXMLUrl = "http://steamcommunity.com/id/" . $profilename . "/stats/" . $appname . "/achievements/?xml=1";
-$steamProfileXML = file_get_contents($steamProfileXMLUrl);
+$steamAchievementXMLUrl = 'http://steamcommunity.com/id/' . $profilename . '/stats/' . $appname . '/achievements/?xml=1';
+$steamAchievementXML = file_get_contents($steamAchievementXMLUrl);
 
 // XMLとして読み込む
-$parseXML = new SimpleXMLElement($steamProfileXML, LIBXML_NOCDATA);
+$parseXML = new SimpleXMLElement($steamAchievementXML, LIBXML_NOCDATA);
 
-// 実績画像のパスだけ取得
-$achievementIconUrl = $parseXML->avatarMedium;
+// ゲームロゴのパスだけ取得
+$gameLogoUrl = $parseXML->game->gameLogo;
 
-// 実績画像のファイル名とパス
-$achievementIconFileName = pathinfo($achievementIconUrl, PATHINFO_BASENAME);
-$achievementIconFilePath = "../img/" . $achievementIconFileName;
+// ゲームロゴのファイル名とパス
+$gameLogoFileName = pathinfo($gameLogoUrl, PATHINFO_BASENAME);
+$gameLogoFilePath = '../img/' . $gameLogoFileName;
 
 // imgフォルダにないときはDL
-if (!file_exists($achievementIconFilePath)) {
-  $achievementIcon = file_get_contents($achievementIconUrl);
-  file_put_contents($achievementIconFilePath, $achievementIcon);
+if (!file_exists($gameLogoFilePath)) {
+  $gameLogo = file_get_contents($gameLogoUrl);
+  file_put_contents($gameLogoFilePath, $gameLogo);
 }
 
-// 実績画像のパスをルートから見たサーバ内に変更する
-$parseXML->avatarMedium = 'img/' . $achievementIconFileName;
+// ゲームロゴのパスをルートから見たサーバ内に変更する
+$parseXML->game->gameLogo = 'img/' . $gameLogoFileName;
 
-echo $parseXML->asXML();
+// 実績画像の処理用にxmlを保存
+$steamAchievementXMLFilePath = '../xml/' . $appname . '_' .$profilename . '.xml';
+$steamAchievementXML = $parseXML->asXML();
+file_put_contents($steamAchievementXMLFilePath, $steamAchievementXML);
+
+// 出力
+echo $steamAchievementXML;
 
 ?>

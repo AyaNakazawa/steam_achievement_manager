@@ -16,18 +16,19 @@
     <nav class="navbar navbar-inverse">
     	<div class="container-fluid">
     		<div class="navbar-header">
-    			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarEexample1">
+    			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarTop">
     				<span class="sr-only">Toggle navigation</span>
     				<span class="icon-bar"></span>
-    				<span class="icon-bar"></span>
+    				<!-- <span class="icon-bar"></span> -->
     				<span class="icon-bar"></span>
     			</button>
     		</div>
     		
-    		<div class="collapse navbar-collapse" id="navbarEexample1">
+    		<div class="collapse navbar-collapse" id="navbarTop">
     			<ul class="nav navbar-nav">
-    				<li><a href="#">Reset</a></li>
-    				<li><a href="#">History</a></li>
+    				<li class="action-reset"><a><i class="fa fa-times" aria-hidden="true"></i> Reset</a></li>
+    				<!-- <li class="action-history"><a><i class="fa fa-server" aria-hidden="true"></i> History</a></li> -->
+    				<li class="action-reload"><a><i class="glyphicon glyphicon-refresh"></i> Reload</a></li>
     			</ul>
     		</div>
     	</div>
@@ -37,127 +38,21 @@
         <div class="data-search-form">
           <div class="data-error">
           </div>
-          <div class="form-group data-profilename-text">
-            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control">
+          <div class="form-group data-form data-profilename-text">
+            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="">
           </div>
-          <div class="form-group data-appname-text">
-            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control">
+          <div class="form-group data-form data-appname-text">
+            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="">
           </div>
-          <div class="form-group data-search-button">
+          <div class="form-group data-form data-search-button">
             <button type="button" id="data-search-submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
           </div>
         </div>
       </div>
-      <div class="achievement-area">
-        <div class="achievement-info-area">
-          <img src="img/test_logo.jpg" alt="game icon" class="achievement-appicon">
-          <div class="achievement-top">
-            <h2 class="achievement-appname">Game name</h3>
-            <p class="achievement-profilename">User name</p>
-          </div>
-          <img src="img/test_user.jpg" alt="user icon" class="achievement-usericon">
-        </div>
-        <div class="achievement-search-area">
-          <div class="input-group achievement-search-form">
-            <span class="achievement-search-text">
-              <input type="text" id="achievement-search" placeholder="Search achievements" class="form-control">
-            </span>
-          	<span class="input-group-btn achievement-search-button">
-              <button type="button" id="achievement-search-submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button>
-          	</span>
-          </div>
-        </div>
-        <div class="achievement-list-area">
-          <div class="achievement-item">
-            <img src="img/test_achievement.jpg" alt="achievement icon" class="achievement-item-icon">
-            <div class="achievement-item-top">
-              <h3 class="achievement-item-title">Achievement name</h3>
-              <p class="achievement-item-timestamp">2016/08/08 11:23:45</p>
-            </div>
-            <p class="achievement-item-desc">desc. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello.</p>
-            <div class="input-group">
-            </div>
-            <div class="input-group achievement-item-checkboxes">
-              
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-1">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-2">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-3">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-4">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-5">
-            	</label>
-            </div>
-          </div>
-          <div class="achievement-item">
-            <img src="img/test_achievement.jpg" alt="achievement icon" class="achievement-item-icon">
-            <div class="achievement-item-top">
-              <h3 class="achievement-item-title">Achievement name</h3>
-              <p class="achievement-item-timestamp">2016/08/08 11:23:45</p>
-            </div>
-            <p class="achievement-item-desc">desc. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello.</p>
-            <div class="input-group">
-            </div>
-            <div class="input-group achievement-item-checkboxes">
-              
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-1">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-2">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-3">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-4">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-5">
-            	</label>
-            </div>
-          </div>
-          <div class="achievement-item">
-            <img src="img/test_achievement.jpg" alt="achievement icon" class="achievement-item-icon">
-            <div class="achievement-item-top">
-              <h3 class="achievement-item-title">Achievement name</h3>
-              <p class="achievement-item-timestamp">2016/08/08 11:23:45</p>
-            </div>
-            <p class="achievement-item-desc">desc. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello. hello.</p>
-            <div class="input-group">
-            </div>
-            <div class="input-group achievement-item-checkboxes">
-              
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-1">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-2">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-3">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-4">
-            	</label>
-            	<label class="input-group-addon achievement-item-checkbox-area">
-            		<input type="checkbox" class="achievement-item-checkbox-5">
-            	</label>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="pagetop"><a href="#top">PAGE TOP</a></div>
+      
     </div>
     <footer class="container-fluid">
-      <p>
+      <p ="footer-text">
         © 2017 <a href="https://github.com/AyaNakazawa/steam_achievement_manager" target="_blank">Steam Achievement Manager</a> @ <a href="https://github.com/AyaNakazawa/" alt="Aya Nakazawa Github" target="_blank">Aya Nakazawa</a>
       </p>
     </footer>
