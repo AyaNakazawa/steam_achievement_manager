@@ -4,6 +4,14 @@
 $appname = $_GET['appname'];
 $profilename = $_GET['profilename'];
 
+if (!file_exists('../img')) {
+  mkdir('../img');
+}
+
+if (!file_exists('../xml')) {
+  mkdir('../xml');
+}
+
 // 受け取った profilename と appname からローカルのxmlのパスを取得
 $steamAchievementXMLUrl = '../xml/' . $appname . '_' .$profilename . '.xml';
 

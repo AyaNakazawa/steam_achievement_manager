@@ -7,6 +7,14 @@ $profilename = $_GET['profilename'];
 $achievementCount = intval($_GET['achievementCount']);
 $exitFlg = $_GET['exitFlg'];
 
+if (!file_exists('../img')) {
+  mkdir('../img');
+}
+
+if (!file_exists('../xml')) {
+  mkdir('../xml');
+}
+
 // 受け取った profilename と appname からローカルのxmlを取得
 $steamAchievementXMLUrl = '../xml/' . $appname . '_' .$profilename . '.xml';
 $steamAchievementXML = file_get_contents($steamAchievementXMLUrl);

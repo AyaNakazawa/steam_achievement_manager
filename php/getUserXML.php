@@ -3,6 +3,14 @@
 
 $profilename = $_GET['profilename'];
 
+if (!file_exists('../img')) {
+  mkdir('../img');
+}
+
+if (!file_exists('../xml')) {
+  mkdir('../xml');
+}
+
 // 受け取った profilename からxmlを取得
 $steamProfileXMLUrl = 'http://steamcommunity.com/id/' . $profilename . '/?xml=1';
 $steamProfileXML = file_get_contents($steamProfileXMLUrl);

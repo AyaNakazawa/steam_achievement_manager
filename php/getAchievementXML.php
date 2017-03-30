@@ -4,6 +4,14 @@
 $appname = $_GET['appname'];
 $profilename = $_GET['profilename'];
 
+if (!file_exists('../img')) {
+  mkdir('../img');
+}
+
+if (!file_exists('../xml')) {
+  mkdir('../xml');
+}
+
 // 受け取った profilename と appname からxmlを取得
 $steamAchievementXMLUrl = 'http://steamcommunity.com/id/' . $profilename . '/stats/' . $appname . '/achievements/?xml=1';
 $steamAchievementXML = file_get_contents($steamAchievementXMLUrl);
