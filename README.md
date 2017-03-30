@@ -9,6 +9,13 @@ Steam Achievement Manager は、PCゲームのプラットフォームである 
 
 ![Demo](/document/gif/readme_demo.gif)
 
+1. Sample
+  * Game name: payday2
+  * User name: OVERKILL_Almir
+2. Sample
+  * Game name: l4d2
+  * User name: ChetFaliszek
+
 ## Usage
 
 1. ゲーム名 と ユーザー名 を入力すると、実績情報を自動で取得し、表示します。
