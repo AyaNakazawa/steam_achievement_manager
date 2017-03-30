@@ -13,7 +13,7 @@ var achievementList = [];
 // 定数
 const LOCAL_STORAGE_HISTORY_KEY = "steamAchievementManagerHistoryV1";
 const HTML_ACHIEVEMENT_AREA =
-  '<div class="achievement-area"><div class="achievement-info-area"><a class="achievement-appicon" target="_blank"><img alt="Game logo loading..."></a><div class="achievement-top"><h2 class="achievement-appname"></h3><p class="achievement-profilename"></p></div><a class="achievement-usericon" target="_blank"><img alt="User icon loading..."></a></div><div class="achievement-search-area"><div class="input-group achievement-search-form"><span class="input-group-btn achievement-search-type"><button type="button" class="btn btn-default dropdown-toggle achievement-search-type-dropdown" data-toggle="dropdown" aria-expanded="false">OR <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li class="achievement-search-type-button" data-achievement-search-type="OR"><a>OR</a></li><li class="achievement-search-type-button" data-achievement-search-type="AND"><a>AND</a></li><li class="achievement-search-type-button" data-achievement-search-type="NOR"><a>NOR</a></li><li class="achievement-search-type-button" data-achievement-search-type="NAND"><a>NAND</a></li></ul></span><input type="text" id="achievement-search" placeholder="Search achievements" class="form-control achievement-search-text"></div><div class="achievement-search-result"></div></div><div class="achievement-list-area"></div></div>';
+  '<div class="achievement-area"><div class="achievement-info-area"><a class="achievement-appicon" target="_blank"><img alt="Game logo loading..."></a><a class="achievement-usericon" target="_blank"><img alt="User icon loading..."></a><div class="achievement-top"><h2 class="achievement-appname"></h2><p class="achievement-profilename"></p></div></div><div class="achievement-search-area"><div class="input-group achievement-search-form"><span class="input-group-btn achievement-search-type"><button type="button" class="btn btn-default dropdown-toggle achievement-search-type-dropdown" data-toggle="dropdown" aria-expanded="false">OR <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li class="achievement-search-type-button" data-achievement-search-type="OR"><a>OR</a></li><li class="achievement-search-type-button" data-achievement-search-type="AND"><a>AND</a></li><li class="achievement-search-type-button" data-achievement-search-type="NOR"><a>NOR</a></li><li class="achievement-search-type-button" data-achievement-search-type="NAND"><a>NAND</a></li></ul></span><input type="text" id="achievement-search" placeholder="Search achievements" class="form-control achievement-search-text"></div><div class="achievement-search-result"></div></div><div class="achievement-list-area"></div></div>';
 const helpContent =
   '<ol><li>ゲーム名 と ユーザー名 を入力すると、実績情報を自動で取得し、表示します。</li><ul><li>ゲーム名</li><ul><li>gameFriendlyName</li></ul><li>ユーザー名</li><ul><li>customURL</li></ul></ul><li>検索バーに文字列を入力すると、実績が絞り込まれます。</li><ul><li>検索用シンボル</li><ul><li>文字列 - 文字列が 実績名 解除日時 実績内容 メモ に含まれるか</li><li>$c - クリアしているか</li><li>$c1 - チェックボックス1</li><li>$c10 - チェックボックス10</li><li>! - シンボルの先頭に ! をつけると否定</li></ul><li>区切り文字</li><ul><li>スペース - スペースを区切り文字として、論理演算を行う</li></ul><li>論理演算子</li><ul><li>OR - シンボルが一つでも真ならTrue</li><li>AND - 全てのシンボルが真ならTrue</li><li>NOR - シンボルが一つでも偽ならTrue</li><li>NAND - 全てのシンボルが偽ならTrue</li></ul></ul><li>ゲーム名 と ユーザー名 の組み合わせと、それぞれの実績の メモ と チェック状況 はブラウザに保存され、次回以降それぞれ自動で表示されます。</li><ul><li>localStorageを使用</li></ul></ol>';
 
@@ -31,7 +31,7 @@ $(function() {
   // トップまでのスクロール
   $(document).on('click', '#pagetop', function() {
     console.log("Scroll to Top");
-    $('body,html').animate({scrollTop:0}, 500);
+    $('body,html').animate({scrollTop:$(".achievement-area").offset().top}, 500);
   });
   
   // ----------------------------------------------------------------
@@ -176,6 +176,103 @@ $(function() {
     
   });
   
+  // ----------------------------------------------------------------
+  // 実績項目のメモを更新
+  $(document).on('change', '.achievement-item-memo-text', function() {
+    // console.log("Change Achievement search text: " + $(this).val());
+    
+    achievementId = $(this).parent().parent().parent().attr("data-id");
+    
+    // ローカルストレージからメモとチェック状況を読み込み
+    var tempKey = "";
+    tempKey += "samAI";
+    tempKey += "-" + appname;
+    tempKey += "-" + profilename;
+    tempKey += "-" + achievementId;
+    
+    // メモ
+    var localStorageAchievementItemMemoKey = tempKey + "-m";
+    var localStorageAchievementItemMemoValue = $(this).val();
+    
+    console.log(localStorageAchievementItemMemoKey + " <- " + localStorageAchievementItemMemoValue);
+    
+    achievementList[achievementId]["memo"] = localStorageAchievementItemMemoValue;
+    
+    localStorage.setItem(localStorageAchievementItemMemoKey, localStorageAchievementItemMemoValue);
+    
+  });
+  
+  // ----------------------------------------------------------------
+  // 実績項目のチェック状況を更新
+  $(document).on('click', '.achievement-item-checkbox-area', function() {
+    
+    achievementId = $(this).parent().parent().parent().attr("data-id");
+    checkId = $(this).find("input").attr("class");
+    checkId = checkId.substr(checkId.length - 1);
+    
+    console.log("checkId: " + checkId);
+    
+    if (achievementList[achievementId]["check" + checkId] === "t") {
+      achievementList[achievementId]["check" + checkId] = "f";
+    } else {
+      achievementList[achievementId]["check" + checkId] = "t";
+    }
+  
+    // ローカルストレージからメモとチェック状況を読み込み
+    var tempKey = "";
+    tempKey += "samAI";
+    tempKey += "-" + appname;
+    tempKey += "-" + profilename;
+    tempKey += "-" + achievementId;
+    
+    // チェック
+    var localStorageAchievementItemCheckKey = tempKey + "-c";
+    var localStorageAchievementItemCheckValue = "";
+    
+    if (achievementList[achievementId]["check1"] === "t") {
+      localStorageAchievementItemCheckValue += "t";
+    } else {
+      localStorageAchievementItemCheckValue += "f";
+    }
+    if (achievementList[achievementId]["check2"] === "t") {
+      localStorageAchievementItemCheckValue += "t";
+    } else {
+      localStorageAchievementItemCheckValue += "f";
+    }
+    if (achievementList[achievementId]["check3"] === "t") {
+      localStorageAchievementItemCheckValue += "t";
+    } else {
+      localStorageAchievementItemCheckValue += "f";
+    }
+    if (achievementList[achievementId]["check4"] === "t") {
+      localStorageAchievementItemCheckValue += "t";
+    } else {
+      localStorageAchievementItemCheckValue += "f";
+    }
+    if (achievementList[achievementId]["check5"] === "t") {
+      localStorageAchievementItemCheckValue += "t";
+    } else {
+      localStorageAchievementItemCheckValue += "f";
+    }
+    
+    var check1 = localStorageAchievementItemCheckValue.substr(0,1);
+    var check2 = localStorageAchievementItemCheckValue.substr(1,1);
+    var check3 = localStorageAchievementItemCheckValue.substr(2,1);
+    var check4 = localStorageAchievementItemCheckValue.substr(3,1);
+    var check5 = localStorageAchievementItemCheckValue.substr(4,1);
+    
+    achievementList[achievementId]["check1"] = check1;
+    achievementList[achievementId]["check2"] = check2;
+    achievementList[achievementId]["check3"] = check3;
+    achievementList[achievementId]["check4"] = check4;
+    achievementList[achievementId]["check5"] = check5;
+    
+    console.log(localStorageAchievementItemCheckKey + " <- " + localStorageAchievementItemCheckValue);
+    
+    localStorage.setItem(localStorageAchievementItemCheckKey, localStorageAchievementItemCheckValue);
+    
+  });
+  
 });
 
 // ----------------------------------------------------------------
@@ -244,7 +341,7 @@ function searchData(){
   $.get('php/getAchievementXML.php', {appname:appname, profilename:profilename}, function(data){
     console.log("Get achievement xml");
     console.log("\t" + appname + " for " + profilename);
-    console.log(data);
+    // console.log(data);
     
     // 準備
     var achievements = $(data).find("achievements").find("achievement");
@@ -403,7 +500,7 @@ function filterAchievement(_queryString){
         // 否定（!）があればスイッチして否定（!）を消す
         if (query.charAt(0) === "!") {
           visible = toggleBoolean(visible);
-          query = query.substring(1);
+          query = query.substr(1);
         }
         
         if (query.indexOf("$c1") === 0) {
@@ -535,10 +632,84 @@ function getHtmlAchievementItem(_achievementItem, _achievementCount) {
   var achievementName = $(_achievementItem).find("name").text();
   var achievementDescription = $(_achievementItem).find("description").text();
   
-  // 実績リストに実績を追加
-  addAchievementItem(achievementName, achievementAchieved, achievementTimestamp, achievementDescription, achievementCount);
+  // ローカルストレージからメモとチェック状況を読み込み
+  var tempKey = "";
+  tempKey += "samAI";
+  tempKey += "-" + appname;
+  tempKey += "-" + profilename;
+  tempKey += "-" + achievementCount;
   
-  return '<div class="achievement-item" id="achievement-item-' + achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + achievementTimestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p></div>';
+  // メモ
+  var localStorageAchievementItemMemoKey = tempKey + "-m";
+  
+  var localStorageAchievementItemMemoValue = localStorage.getItem(localStorageAchievementItemMemoKey);
+  if (localStorageAchievementItemMemoValue === null) {
+    localStorageAchievementItemMemoValue = "";
+  } else {
+    console.log(localStorageAchievementItemMemoKey + " -> " + localStorageAchievementItemMemoValue);
+    
+  }
+  
+  // console.log(localStorageAchievementItemMemoKey + " -> " + localStorageAchievementItemMemoValue);
+  
+  // チェック
+  var localStorageAchievementItemCheckKey = tempKey + "-c";
+  
+  var localStorageAchievementItemCheckValue = localStorage.getItem(localStorageAchievementItemCheckKey);
+  if (localStorageAchievementItemCheckValue === null) {
+    localStorageAchievementItemCheckValue = "fffff";
+  } else {
+    console.log(localStorageAchievementItemCheckKey + " -> " + localStorageAchievementItemCheckValue);
+    
+  }
+  
+  var check1 = localStorageAchievementItemCheckValue.substr(0,1);
+  var check2 = localStorageAchievementItemCheckValue.substr(1,1);
+  var check3 = localStorageAchievementItemCheckValue.substr(2,1);
+  var check4 = localStorageAchievementItemCheckValue.substr(3,1);
+  var check5 = localStorageAchievementItemCheckValue.substr(4,1);
+  
+  // 実績リストに実績を追加
+  achievementList[achievementCount] = {
+    "name": achievementName,
+    "achieved": achievementAchieved,
+    "unlockTimestamp": achievementTimestamp,
+    "description": achievementDescription,
+    "memo": localStorageAchievementItemMemoValue,
+    "check1": check1,
+    "check2": check2,
+    "check3": check3,
+    "check4": check4,
+    "check5": check5
+  };
+  
+  if (check1 === "t") {
+    check1 = " checked";
+  } else {
+    check1 = "";
+  }
+  if (check2 === "t") {
+    check2 = " checked";
+  } else {
+    check2 = "";
+  }
+  if (check3 === "t") {
+    check3 = " checked";
+  } else {
+    check3 = "";
+  }
+  if (check4 === "t") {
+    check4 = " checked";
+  } else {
+    check4 = "";
+  }
+  if (check5 === "t") {
+    check5 = " checked";
+  } else {
+    check5 = "";
+  }
+  
+  return '<div class="achievement-item" id="achievement-item-' + achievementCount + '" data-id="' + achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + achievementTimestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p><div class="achievement-item-edit-area"><div class="achievement-item-memo"><textarea rows="1" placeholder="Enter notes" class="form-control achievement-item-memo-text">' + localStorageAchievementItemMemoValue + '</textarea></div><div class="input-group achievement-item-checkboxes"><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-1"' + check1 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-2"' + check2 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-3"' + check3 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-4"' + check4 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-5"' + check5 + '></label></div></div></div>';
 }
 
 // ----------------------------------------------------------------
@@ -564,7 +735,6 @@ function getDateString(_date){
 // ----------------------------------------------------------------
 // 履歴を更新
 function updateHistory(_appname, _profilename){
-  console.log("localStorageHistory: update");
   
   var arrayOfHistoryValue;
   
@@ -574,12 +744,10 @@ function updateHistory(_appname, _profilename){
   // 履歴に追加
   var localStorageActiveKey = appname + ":" + profilename;
   var localStorageHistoryValue = localStorage.getItem(LOCAL_STORAGE_HISTORY_KEY);
+  console.log(LOCAL_STORAGE_HISTORY_KEY + " -> " + localStorageHistoryValue);
   
   // 履歴が存在する場合は整形
   if (localStorageHistoryValue != null) {
-    console.log("localStorageHistoryValue: " + localStorageHistoryValue);
-    console.log("localStorageHistoryValue: ↓");
-  
     localStorageHistoryValue = localStorageHistoryValue.replace(/\s+/g, "");
     arrayOfHistoryValue = localStorageHistoryValue.split(",");
   }
@@ -596,7 +764,7 @@ function updateHistory(_appname, _profilename){
     }
   }
   
-  console.log("localStorageHistoryValue: " + localStorageHistoryValue);
+  console.log(LOCAL_STORAGE_HISTORY_KEY + " <- " + localStorageHistoryValue);
   localStorage.setItem(LOCAL_STORAGE_HISTORY_KEY, localStorageHistoryValue);
   
 }
@@ -611,6 +779,7 @@ function getHistory(){
 
   // 履歴を取得
   var localStorageHistoryValue = localStorage.getItem(LOCAL_STORAGE_HISTORY_KEY);
+    console.log(LOCAL_STORAGE_HISTORY_KEY + " -> " + localStorageHistoryValue);
   
   // 履歴が存在する場合は整形
   if (localStorageHistoryValue != null) {
@@ -692,59 +861,6 @@ function initializeLocalStorage(_initializeFlg) {
 // 実績リストの初期化
 function clearAchievementList() {
   achievementList = [];
-}
-
-// ----------------------------------------------------------------
-// 実績リストに実績を追加
-function addAchievementItem(_achievementName, _achievementAchieved, _achievementTimestamp, _achievementDescription, _achievementCount) {
-  achievementName = _achievementName || "Name";
-  achievementAchieved = _achievementAchieved || "f";
-  achievementTimestamp = _achievementTimestamp || "Lock";
-  achievementDescription = _achievementDescription || "Description";
-  achievementCount = _achievementCount || 0;
-  
-  // ローカルストレージからメモとチェック状況を読み込み
-  var tempKey = "";
-  tempKey += "steamAchievementManagerAchievementItem";
-  tempKey += "-" + appname;
-  tempKey += "-" + profilename;
-  tempKey += "-" + achievementCount;
-  
-  // メモ
-  var localStorageAchievementItemMemoKey = tempKey + "-memo";
-  
-  var localStorageAchievementItemMemoValue = localStorage.getItem(localStorageAchievementItemMemoKey);
-  if (localStorageAchievementItemMemoValue === null) {
-    localStorageAchievementItemMemoValue = "";
-  }
-  
-  // チェック
-  var localStorageAchievementItemCheckKey = tempKey + "-check";
-  
-  var localStorageAchievementItemCheckValue = localStorage.getItem(localStorageAchievementItemCheckKey);
-  if (localStorageAchievementItemCheckValue === null) {
-    localStorageAchievementItemCheckValue = "fffff";
-  }
-  var check1 = localStorageAchievementItemCheckValue.substring(1,1);
-  var check2 = localStorageAchievementItemCheckValue.substring(2,1);
-  var check3 = localStorageAchievementItemCheckValue.substring(3,1);
-  var check4 = localStorageAchievementItemCheckValue.substring(4,1);
-  var check5 = localStorageAchievementItemCheckValue.substring(5,1);
-  
-  // 追加・更新
-  achievementList[achievementCount] = {
-    "name": achievementName,
-    "achieved": achievementAchieved,
-    "unlockTimestamp": achievementTimestamp,
-    "description": achievementDescription,
-    "memo": localStorageAchievementItemMemoValue,
-    "check1": check1,
-    "check2": check2,
-    "check3": check3,
-    "check4": check4,
-    "check5": check5
-  };
-  
 }
 
 // ----------------------------------------------------------------

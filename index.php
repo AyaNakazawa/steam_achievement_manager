@@ -46,10 +46,10 @@
             <!-- data-error-list -->
           </div>
           <div class="form-group data-form data-appname-text">
-            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="payday2">
+            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="">
           </div>
           <div class="form-group data-form data-profilename-text">
-            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="memoriamtk">
+            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="">
           </div>
           <div class="form-group data-form data-search-button">
             <button type="button" id="data-search-submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>

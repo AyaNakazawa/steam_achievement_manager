@@ -3,7 +3,7 @@
 
 ## Description
 
-Steam Achievement Manager は、PCゲームのプラットフォームである Steam の実績を閲覧できるものです。
+Steam Achievement Manager は、PCゲームのプラットフォームである Steam の実績を閲覧、管理できるものです。
 
 ## Usage
 
