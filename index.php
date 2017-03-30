@@ -37,6 +37,7 @@
       <div class="data-search-area">
         <div class="data-search-form">
           <div class="data-error">
+            <!-- data-error-list -->
           </div>
           <div class="form-group data-form data-profilename-text">
             <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="">
@@ -49,7 +50,12 @@
           </div>
         </div>
       </div>
-      
+      <!-- achievement-area -->
+        <!-- achievement-info-area -->
+        <!-- achievement-search-area -->
+        <!-- achievement-list-area -->
+          <!-- achievement-item * -->
+      <!-- pagetop -->
     </div>
     <footer class="container-fluid">
       <p ="footer-text">

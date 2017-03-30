@@ -48,6 +48,11 @@ header {
   cursor: pointer;
 }
 
+.nav {
+  display: inline-block;
+  float: none;
+}
+
 /* main */
 
 .main {

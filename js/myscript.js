@@ -4,13 +4,18 @@ var addDataErrorCount = 0;
 var profilename = "";
 var appname = "";
 
+var localStorageFlg = true;
+
 $(function() {
   
+  // ----------------------------------------------------------------
   // ローカルストレージ対応判定
   if(!localStorage) {
-    alert('ローカルストレージに対応していないため、データを保存できません');
+    console.log('"Local Storage" is unsupported. Data can not be saved.');
+    localStorageFlg = false;
   }
   
+  // ----------------------------------------------------------------
   // dataの検索
   $('#data-search-submit').click(function() {
     console.log("Data search click");
@@ -43,10 +48,13 @@ $(function() {
     
   });
   
+  // ----------------------------------------------------------------
   // リセット
   $('.action-reset').click(function() {
     console.log("Reset click");
-    dataReset();
+    
+    $('.data-error').empty();
+    deleteAchievementArea();
   });
   
   // 履歴
@@ -57,6 +65,10 @@ $(function() {
   // 再読込
   $('.action-reload').click(function() {
     console.log("Reload click");
+  
+    addDataErrorCount = 0;
+    $('.data-error').empty();
+    
     dataSearch();
   });
   
@@ -68,8 +80,11 @@ $(function() {
   
 });
 
+// ----------------------------------------------------------------
 // function
+// ----------------------------------------------------------------
 
+// ----------------------------------------------------------------
 // エラーを追加
 function addDataError(errorString){
   if (addDataErrorCount === 0){
@@ -80,15 +95,21 @@ function addDataError(errorString){
   addDataErrorCount++;
 }
 
+// ----------------------------------------------------------------
 // 検索
 function dataSearch(){
   console.log("Data search start");
   
-  if (profilename.length === 0 || appname.length === 0){
+  if (profilename.length === 0){
+    addDataError("Profile nameを入力してください");
+    return;
+  }
+  if (appname.length === 0){
+    addDataError("Game nameを入力してください");
     return;
   }
   
-  dataReset();
+  deleteAchievementArea();
   
   // ajax ゲーム情報と実績を取得
   $.get('php/getAchievementXML.php', {profilename:profilename, appname:appname}, function(data){
@@ -103,19 +124,22 @@ function dataSearch(){
     // 存在確認
     if (achievementsLength === 0){
       console.log("Load faild");
+      addDataError("Profile name か Game name に異常があります。");
       return;
     }
     
-    $(".main").append('<div class="achievement-area"><div class="achievement-info-area"><a class="achievement-appicon" target="_blank"><img alt="game icon"></a><div class="achievement-top"><h2 class="achievement-appname"></h3><p class="achievement-profilename"></p></div><a class="achievement-usericon" target="_blank"><img alt="user icon"></a></div><div class="achievement-search-area"><div class="input-group achievement-search-form"><input type="text" id="achievement-search" placeholder="Search achievements" class="form-control achievement-search-text"><span class="input-group-btn achievement-search-button"><button type="button" id="achievement-search-submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button></span></div></div><div class="achievement-list-area"></div></div><div id="pagetop">PAGE TOP</div>');
+    // 実績領域を追加
+    $(".main").append(getHtmlAchievementArea());
+    $(".main").append(getHtmlPagetop());
     
     // ゲーム名の表示
     var gameName = $(data).find("game").find("gameName").text();
     $(".achievement-appname").text(gameName);
     
     // ゲームロゴの表示とリンク
-    var appIconFilePath = $(data).find("game").find("gameLogo").text();
+    var appIconPath = $(data).find("game").find("gameLogo").text();
     var appLink = $(data).find("game").find("gameLink").text();
-    $(".achievement-appicon > img").attr("src", appIconFilePath);
+    $(".achievement-appicon > img").attr("src", appIconPath);
     $(".achievement-appicon").attr("href", appLink);
     
     // ajax ユーザーを取得
@@ -129,44 +153,29 @@ function dataSearch(){
       $(".achievement-profilename").text(userName);
       
       // アバターの表示とリンク
-      var userIconFileList = $(data).find("avatarMedium");
-      var userIconFilePath = $(userIconFileList[0]).text();
-      $(".achievement-usericon > img").attr("src", userIconFilePath);
+      var userIconPathList = $(data).find("avatarMedium");
+      var userIconPath = $(userIconPathList[0]).text();
+      $(".achievement-usericon > img").attr("src", userIconPath);
       $(".achievement-usericon").attr("href", "http://steamcommunity.com/id/" + profilename);
       
     });
     
     var achievementCount = 0;
-    var exitFlg = "false";
     
     // 実績内容
     console.log("Get achievement");
     achievements.each(function() {
         // console.log($(this).find("name").text() + " " + $(this).attr("closed"));
         
-        // 要素に値を設定
-        var timestamp = "Lock";
-        if ($(this).attr("closed") === "1") {
-          var unlockDate = new Date(1000 * $(this).find("unlockTimestamp").text());
-          timestamp = "" + ("000" + unlockDate.getFullYear()).slice(-4);
-          timestamp += "/" + ("0" + (unlockDate.getMonth() + 1)).slice(-2);
-          timestamp += "/" + ("0" + unlockDate.getDate()).slice(-2);
-          timestamp += " " + ("0" + unlockDate.getHours()).slice(-2);
-          timestamp += ":" + ("0" + unlockDate.getMinutes()).slice(-2);
-          timestamp += ":" + ("0" + unlockDate.getSeconds()).slice(-2);
-        } 
-        
-        var achievementName = $(this).find("name").text();
-        var achievementDescription = $(this).find("description").text();
-        
         // 実績追加
-        $(".achievement-list-area").append('<div class="achievement-item" id="achievement-item-' + achievementCount + '"><img alt="achievement icon" class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + timestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p><div class="input-group"></div></div>');
+        $(".achievement-list-area").append(getHtmlAchievementItem(this, achievementCount));
         
         achievementCount++;
       
     });
     
-    var achievementCount = 0;
+    achievementCount = 0;
+    var exitFlg = "false";
     
     // ajax 実績画像を取得
     console.log("Get achievement image");
@@ -175,18 +184,21 @@ function dataSearch(){
         // console.log($(data).find("id").text() + ": " + data);
         
         // アイコンパス
-        var iconFilePath;
+        var achievementItemIconPath;
         if ($(data).find("closed").text() === "1") {
-          iconFilePath = $(data).find("iconClosed").text();
+          achievementItemIconPath = $(data).find("iconClosed").text();
         } else {
-          iconFilePath = $(data).find("iconOpen").text();
+          achievementItemIconPath = $(data).find("iconOpen").text();
         }
         
         // console.log($(data).find("id").text() + ": " + $(data).find("closed").text());
         
+        var achievementItemId = $(data).find("id").text();
+        var achievementItemSelector = "#achievement-item-" + achievementItemId;
+        
         // アイコンを設定
-        $("#achievement-item-" + $(data).find("id").text() + " .achievement-item-icon").attr("src", iconFilePath);
-        $("#achievement-item-" + $(data).find("id").text() + " .achievement-item-icon").attr("alt", "achievement icon");
+        $(achievementItemSelector + " .achievement-item-icon").attr("src", achievementItemIconPath);
+        $(achievementItemSelector + " .achievement-item-icon").attr("alt", "achievement icon");
         
       });
       
@@ -203,8 +215,52 @@ function dataSearch(){
   
 }
 
-function dataReset(){
+// ----------------------------------------------------------------
+// 実績領域を削除
+function deleteAchievementArea(){
   $(".achievement-area").remove();
   $("#pagetop").remove();
   
+}
+
+// ----------------------------------------------------------------
+// 実績領域を生成
+function getHtmlAchievementArea() {
+  return '<div class="achievement-area"><div class="achievement-info-area"><a class="achievement-appicon" target="_blank"><img alt="Game logo loading..."></a><div class="achievement-top"><h2 class="achievement-appname"></h3><p class="achievement-profilename"></p></div><a class="achievement-usericon" target="_blank"><img alt="User icon loading..."></a></div><div class="achievement-search-area"><div class="input-group achievement-search-form"><input type="text" id="achievement-search" placeholder="Search achievements" class="form-control achievement-search-text"><span class="input-group-btn achievement-search-button"><button type="button" id="achievement-search-submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button></span></div></div><div class="achievement-list-area"></div></div>';
+}
+
+// ----------------------------------------------------------------
+// 実績を生成
+function getHtmlAchievementItem(_achievementItem, _achievementCount) {
+  
+  // 値を取得
+  var timestamp = "Lock";
+  if ($(_achievementItem).attr("closed") === "1") {
+    var unlockDate = new Date(1000 * $(_achievementItem).find("unlockTimestamp").text());
+    timestamp = getDateString(unlockDate);
+  } 
+  
+  var achievementName = $(_achievementItem).find("name").text();
+  var achievementDescription = $(_achievementItem).find("description").text();
+  
+  return '<div class="achievement-item" id="achievement-item-' + _achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + timestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p></div>';
+}
+
+// ----------------------------------------------------------------
+// pagetopを生成
+function getHtmlPagetop() {
+  return '<div id="pagetop">PAGE TOP</div>';
+}
+
+// ----------------------------------------------------------------
+// Dateオブジェクトからゼロ埋めした日時文字列を生成
+function getDateString(_date){
+  var dateString = "";
+  dateString += "" + ("000" + _date.getFullYear()).slice(-4);
+  dateString += "/" + ("0" + (_date.getMonth() + 1)).slice(-2);
+  dateString += "/" + ("0" + _date.getDate()).slice(-2);
+  dateString += " " + ("0" + _date.getHours()).slice(-2);
+  dateString += ":" + ("0" + _date.getMinutes()).slice(-2);
+  dateString += ":" + ("0" + _date.getSeconds()).slice(-2);
+  return dateString;
 }
