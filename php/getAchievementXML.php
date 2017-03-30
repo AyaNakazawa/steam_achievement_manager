@@ -1,8 +1,8 @@
 
 <?php
 
-$profilename = $_GET['profilename'];
 $appname = $_GET['appname'];
+$profilename = $_GET['profilename'];
 
 // 受け取った profilename と appname からxmlを取得
 $steamAchievementXMLUrl = 'http://steamcommunity.com/id/' . $profilename . '/stats/' . $appname . '/achievements/?xml=1';

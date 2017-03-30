@@ -1,8 +1,8 @@
 
 <?php
 
-$profilename = $_GET['profilename'];
 $appname = $_GET['appname'];
+$profilename = $_GET['profilename'];
 
 $achievementCount = intval($_GET['achievementCount']);
 $exitFlg = $_GET['exitFlg'];

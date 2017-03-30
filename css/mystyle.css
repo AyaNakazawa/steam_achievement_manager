@@ -53,6 +53,23 @@ header {
   float: none;
 }
 
+.nav .dropdown-menu {
+  background: #171a21;
+  color
+  
+}
+
+.nav .dropdown-menu a {
+  background: #171a21;
+  color: #C6D4DF;
+}
+
+.nav .dropdown-menu a:hover {
+  background: #272a31;
+  text-decoration: none;
+  color: #E6F4FF;
+}
+
 /* main */
 
 .main {
