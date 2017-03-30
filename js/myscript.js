@@ -2,14 +2,20 @@
 // グローバル変数
 var appname = "";
 var profilename = "";
+var achievementSearchType = "OR";
 
 var addDataErrorCount = 0;
 
 var localStorageFlg = true;
 
+var achievementList = [];
+
 // 定数
 const LOCAL_STORAGE_HISTORY_KEY = "steamAchievementManagerHistoryV1";
-const HTML_ACHIEVEMENT_AREA = '<div class="achievement-area"><div class="achievement-info-area"><a class="achievement-appicon" target="_blank"><img alt="Game logo loading..."></a><div class="achievement-top"><h2 class="achievement-appname"></h3><p class="achievement-profilename"></p></div><a class="achievement-usericon" target="_blank"><img alt="User icon loading..."></a></div><div class="achievement-search-area"><div class="input-group achievement-search-form"><input type="text" id="achievement-search" placeholder="Search achievements" class="form-control achievement-search-text"><span class="input-group-btn achievement-search-button"><button type="button" id="achievement-search-submit" class="btn btn-default"><i class="fa fa-search" aria-hidden="true"></i></button></span></div></div><div class="achievement-list-area"></div></div>';
+const HTML_ACHIEVEMENT_AREA =
+  '<div class="achievement-area"><div class="achievement-info-area"><a class="achievement-appicon" target="_blank"><img alt="Game logo loading..."></a><div class="achievement-top"><h2 class="achievement-appname"></h3><p class="achievement-profilename"></p></div><a class="achievement-usericon" target="_blank"><img alt="User icon loading..."></a></div><div class="achievement-search-area"><div class="input-group achievement-search-form"><span class="input-group-btn achievement-search-type"><button type="button" class="btn btn-default dropdown-toggle achievement-search-type-dropdown" data-toggle="dropdown" aria-expanded="false">OR <span class="caret"></span></button><ul class="dropdown-menu" role="menu"><li class="achievement-search-type-button" data-achievement-search-type="OR"><a>OR</a></li><li class="achievement-search-type-button" data-achievement-search-type="AND"><a>AND</a></li><li class="achievement-search-type-button" data-achievement-search-type="NOR"><a>NOR</a></li><li class="achievement-search-type-button" data-achievement-search-type="NAND"><a>NAND</a></li></ul></span><input type="text" id="achievement-search" placeholder="Search achievements" class="form-control achievement-search-text"></div><div class="achievement-search-result"></div></div><div class="achievement-list-area"></div></div>';
+const helpContent =
+  '<ol><li>ゲーム名 と ユーザー名 を入力すると、実績情報を自動で取得し、表示します。</li><ul><li>ゲーム名</li><ul><li>gameFriendlyName</li></ul><li>ユーザー名</li><ul><li>customURL</li></ul></ul><li>検索バーに文字列を入力すると、実績が絞り込まれます。</li><ul><li>検索用シンボル</li><ul><li>文字列 - 文字列が 実績名 解除日時 実績内容 メモ に含まれるか</li><li>$c - クリアしているか</li><li>$c1 - チェックボックス1</li><li>$c10 - チェックボックス10</li><li>! - シンボルの先頭に ! をつけると否定</li></ul><li>区切り文字</li><ul><li>スペース - スペースを区切り文字として、論理演算を行う</li></ul><li>論理演算子</li><ul><li>OR - シンボルが一つでも真ならTrue</li><li>AND - 全てのシンボルが真ならTrue</li><li>NOR - シンボルが一つでも偽ならTrue</li><li>NAND - 全てのシンボルが偽ならTrue</li></ul></ul><li>ゲーム名 と ユーザー名 の組み合わせと、それぞれの実績の メモ と チェック状況 はブラウザに保存され、次回以降それぞれ自動で表示されます。</li><ul><li>localStorageを使用</li></ul></ol>';
 
 $(function() {
   
@@ -29,41 +35,32 @@ $(function() {
   });
   
   // ----------------------------------------------------------------
-  // dataの検索
-  $('#data-search-submit').click(function() {
+  // データの検索
+  $(document).on('click', '#data-search-submit', function() {
     // console.log("Click Data search");
     
-    addDataErrorCount = 0;
-    var searchPerm = true;
-    
-    appname = $('#appname').val();
-    profilename = $('#profilename').val();
-    
-    deleteDataError();
-    
-    // 入力欄判定
-    if (appname.length === 0){
-      searchPerm = false;
-      addDataError("Game nameを入力してください");
-    }
-    if (profilename.length === 0){
-      searchPerm = false;
-      addDataError("Profile nameを入力してください");
-    }
-    
-    // 検索の実行
-    if (searchPerm) {
-      dataSearch();
-    } else {
-      console.log("Data search NG");
-      
-    }
+    runSearchData();
     
   });
   
   // ----------------------------------------------------------------
+  // エンターキーでデータの検索
+  $(document).on('keypress', '#appname', function(e) {
+    console.log("Keypress in appname");
+    if (e.which === 13) {
+      runSearchData();
+    }
+  });
+  $(document).on('keypress', '#profilename', function(e) {
+    console.log("Keypress in profilename");
+    if (e.which === 13) {
+      runSearchData();
+    }
+  });
+  
+  // ----------------------------------------------------------------
   // タイトル
-  $('#title').click(function() {
+  $(document).on('click', '#title', function() {
     // console.log("Click Title");
     
     location.reload();
@@ -72,8 +69,8 @@ $(function() {
   
   // ----------------------------------------------------------------
   // リセット
-  $('.action-reset').click(function() {
-    // console.log("Click Reset");
+  $(document).on('click', '.action-reset', function() {
+    // console.log("Click Reset action");
     
     deleteDataError();
     deleteAchievementArea();
@@ -81,8 +78,8 @@ $(function() {
   
   // ----------------------------------------------------------------
   // 履歴リスト
-  $('.action-history-header').click(function() {
-    // console.log("Click History header");
+  $(document).on('click', '.action-history-header', function() {
+    // console.log("Click History header action");
     
     $('.action-history-list').empty();
     
@@ -103,7 +100,7 @@ $(function() {
   // ----------------------------------------------------------------
   // 履歴項目
   $(document).on('click', '.action-history-item', function() {
-    // console.log("Click History item");
+    // console.log("Click History item action");
     
     appname = $(this).attr("data-appname");
     profilename = $(this).attr("data-profilename");
@@ -121,26 +118,62 @@ $(function() {
     addDataErrorCount = 0;
     deleteDataError();
     
-    dataSearch();
+    searchData();
   });
   
   // ----------------------------------------------------------------
   // 再読込
-  $('.action-reload').click(function() {
-    // console.log("Click Reload");
+  $(document).on('click', '.action-reload', function() {
+    // console.log("Click Reload action");
   
     addDataErrorCount = 0;
     deleteDataError();
     
-    dataSearch();
+    searchData();
   });
   
   // ----------------------------------------------------------------
   // ローカルストレージを初期化
-  $('.action-localStorage-reset').click(function() {
-    // console.log("Click LocalStorage reset");
+  $(document).on('click', '.action-localStorage-reset', function() {
+    // console.log("Click LocalStorage reset action");
     
-    showConfirmDialog("ローカルストレージの初期化", "ローカルストレージに保存されている内容を全て初期化します。\nよろしいですか？", initializeLocalStorage)
+    showConfirmDialog("ローカルストレージの初期化", "<p>ローカルストレージに保存されている内容を全て初期化します。<br>よろしいですか？</p>", initializeLocalStorage)
+  });
+  
+  // ----------------------------------------------------------------
+  // ヘルプ
+  $(document).on('click', '.action-help', function() {
+    // console.log("Click Help action");
+    
+    showDialog("ヘルプ", helpContent);
+    
+  });
+  
+  // ----------------------------------------------------------------
+  // 実績を検索
+  $(document).on('change', '.achievement-search-text', function() {
+    // console.log("Change Achievement search text: " + $(this).val());
+    
+    var queryString = $(this).val();
+    
+    filterAchievement(queryString);
+    
+  });
+  
+  // ----------------------------------------------------------------
+  // 実績検索タイプを指定
+  $(document).on('click', '.achievement-search-type-button', function() {
+    // console.log("Click Achievement search type button: " + $(this).attr("data-achievement-search-type"));
+    
+    achievementSearchType = $(this).attr("data-achievement-search-type");
+    var tempText = achievementSearchType + ' <span class="caret"></span>';
+    
+    $(".achievement-search-type-dropdown").html(tempText);
+    
+    var queryString = $(".achievement-search-text").val();
+    
+    filterAchievement(queryString);
+    
   });
   
 });
@@ -149,19 +182,43 @@ $(function() {
 // Functions
 
 // ----------------------------------------------------------------
-// エラーを追加
-function addDataError(errorString){
-  if (addDataErrorCount === 0){
-    $(".data-error").append('<div class="alert alert-warning data-error-list" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="閉じる"><span aria-hidden="true">×</span></button></div>');
+// 検索を実行
+function runSearchData() {
+  
+  addDataErrorCount = 0;
+  var searchPerm = true;
+  
+  temp_appname = $('#appname').val();
+  temp_profilename = $('#profilename').val();
+  
+  deleteDataError();
+  
+  // 入力欄判定
+  if (temp_appname.length === 0){
+    searchPerm = false;
+    addDataError("Game nameを入力してください");
   }
-  var errorItem = $("<p>").text(errorString);
-  $(".data-error-list").append(errorItem);
-  addDataErrorCount++;
+  if (temp_profilename.length === 0){
+    searchPerm = false;
+    addDataError("Profile nameを入力してください");
+  }
+  
+  appname = temp_appname;
+  profilename = temp_profilename;
+  
+  // 検索の実行
+  if (!searchPerm) {
+    console.log("Data search NG");
+    return;
+  }
+  
+  searchData();
+  
 }
 
 // ----------------------------------------------------------------
 // 検索
-function dataSearch(){
+function searchData(){
   console.log("Data search start");
   
   var searchPerm = true;
@@ -187,7 +244,7 @@ function dataSearch(){
   $.get('php/getAchievementXML.php', {appname:appname, profilename:profilename}, function(data){
     console.log("Get achievement xml");
     console.log("\t" + appname + " for " + profilename);
-    // console.log(data);
+    console.log(data);
     
     // 準備
     var achievements = $(data).find("achievements").find("achievement");
@@ -197,7 +254,6 @@ function dataSearch(){
     if (achievementsLength === 0){
       console.log("Load faild");
       addDataError("実績情報の読み込みに失敗しました");
-      addDataError("正確な値を入力してください");
       $.get('php/deleteAchievementXML.php', {appname:appname, profilename:profilename}, function(data){
         
         if (data) {
@@ -216,6 +272,9 @@ function dataSearch(){
     // 実績領域を追加
     $(".main").append(getHtmlAchievementArea());
     $(".main").append(getHtmlPagetop());
+    
+    // 実績リストを初期化
+    clearAchievementList();
     
     // ゲーム名の表示
     var gameName = $(data).find("game").find("gameName").text();
@@ -259,6 +318,8 @@ function dataSearch(){
       
     });
     
+    $(".achievement-search-result").text("Result: " + achievementCount);
+    
     achievementCount = 0;
     var exitFlg = "false";
     
@@ -301,6 +362,141 @@ function dataSearch(){
 }
 
 // ----------------------------------------------------------------
+// 実績をフィルタ
+function filterAchievement(_queryString){
+  var queryString = _queryString || "";
+  var achievementCount = 0;
+  var visibleAchievementCount = 0;
+  
+  var queryList = queryString.split(" ");
+  
+  // 実績ごとにフィルタリング
+  $(achievementList).each(function() {
+    // console.log(this);
+    var achievementItem = this;
+    var achievementVisible;
+    
+    // 論理演算子ごとに初期化
+    if (achievementSearchType === "OR") {
+      achievementVisible = false;
+    } else if (achievementSearchType === "AND") {
+      achievementVisible = true;
+    } else if (achievementSearchType === "NOR") {
+      achievementVisible = true;
+    } else if (achievementSearchType === "NAND") {
+      achievementVisible = false;
+    }
+    
+    // クエリごとにフィルタリング
+    if (queryList[0].length === 0){
+      achievementVisible = true;
+    } else {
+      $(queryList).each(function() {
+        var query = this.toLowerCase();
+        var visible = false;
+        
+        // 中身がなければ次のへ
+        if (query.length === 0) {
+          return true;
+        }
+        
+        // 否定（!）があればスイッチして否定（!）を消す
+        if (query.charAt(0) === "!") {
+          visible = toggleBoolean(visible);
+          query = query.substring(1);
+        }
+        
+        if (query.indexOf("$c1") === 0) {
+          if (achievementItem["check1"] === "t") {
+            visible = toggleBoolean(visible);
+          }
+        } else if (query.indexOf("$c2") === 0) {
+          if (achievementItem["check2"] === "t") {
+            visible = toggleBoolean(visible);
+          }
+        } else if (query.indexOf("$c3") === 0) {
+          if (achievementItem["check3"] === "t") {
+            visible = toggleBoolean(visible);
+          }
+        } else if (query.indexOf("$c4") === 0) {
+          if (achievementItem["check4"] === "t") {
+            visible = toggleBoolean(visible);
+          }
+        } else if (query.indexOf("$c5") === 0) {
+          if (achievementItem["check5"] === "t") {
+            visible = toggleBoolean(visible);
+          }
+        } else if (query.indexOf("$c") === 0) {
+          if (achievementItem["achieved"] === "t") {
+            visible = toggleBoolean(visible);
+          }
+        } else {
+          if (achievementItem["name"].toLowerCase().indexOf(query) > -1) {
+            visible = toggleBoolean(visible);
+          } else if (achievementItem["unlockTimestamp"].toLowerCase().indexOf(query) > -1) {
+            visible = toggleBoolean(visible);
+          } else if (achievementItem["description"].toLowerCase().indexOf(query) > -1) {
+            visible = toggleBoolean(visible);
+          } else if (achievementItem["memo"].toLowerCase().indexOf(query) > -1) {
+            visible = toggleBoolean(visible);
+          }
+        }
+        
+        // 論理演算制御
+        if (achievementSearchType === "OR") {
+          if (visible) {
+            achievementVisible = true;
+            return false;
+          }
+        } else if (achievementSearchType === "AND") {
+          if (!visible) {
+            achievementVisible = false;
+            return false;
+          }
+        } else if (achievementSearchType === "NOR") {
+          if (visible) {
+            achievementVisible = false;
+            return false;
+          }
+        } else if (achievementSearchType === "NAND") {
+          if (!visible) {
+            achievementVisible = true;
+            return false;
+          }
+        }
+      });
+      
+    }
+    
+    // フラグに合わせて処理
+    if (achievementVisible) {
+      $("#achievement-item-" + achievementCount).removeClass("filtering");
+      visibleAchievementCount++;
+    } else {
+      $("#achievement-item-" + achievementCount).addClass("filtering");
+    }
+    
+    achievementCount++;
+    
+  });
+  
+  // 結果を表示
+  $(".achievement-search-result").text("Result: " + visibleAchievementCount);
+  
+}
+
+// ----------------------------------------------------------------
+// エラーを追加
+function addDataError(errorString){
+  if (addDataErrorCount === 0){
+    $(".data-error").append('<div class="alert alert-warning data-error-list" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="閉じる"><span aria-hidden="true">×</span></button></div>');
+  }
+  var errorItem = $("<p>").text(errorString);
+  $(".data-error-list").append(errorItem);
+  addDataErrorCount++;
+}
+
+// ----------------------------------------------------------------
 // 実績領域を削除
 function deleteAchievementArea(){
   $(".achievement-area").remove();
@@ -324,18 +520,25 @@ function getHtmlAchievementArea() {
 // ----------------------------------------------------------------
 // 実績を生成
 function getHtmlAchievementItem(_achievementItem, _achievementCount) {
+  achievementCount = _achievementCount || 0;
   
   // 値を取得
-  var timestamp = "Lock";
+  var achievementAchieved = "f";
+  
+  var achievementTimestamp = "Lock";
   if ($(_achievementItem).attr("closed") === "1") {
     var unlockDate = new Date(1000 * $(_achievementItem).find("unlockTimestamp").text());
-    timestamp = getDateString(unlockDate);
+    achievementTimestamp = getDateString(unlockDate);
+    achievementAchieved = "t";
   } 
   
   var achievementName = $(_achievementItem).find("name").text();
   var achievementDescription = $(_achievementItem).find("description").text();
   
-  return '<div class="achievement-item" id="achievement-item-' + _achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + timestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p></div>';
+  // 実績リストに実績を追加
+  addAchievementItem(achievementName, achievementAchieved, achievementTimestamp, achievementDescription, achievementCount);
+  
+  return '<div class="achievement-item" id="achievement-item-' + achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + achievementTimestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p></div>';
 }
 
 // ----------------------------------------------------------------
@@ -428,6 +631,20 @@ function getHistory(){
 }
 
 // ----------------------------------------------------------------
+// 通常モーダルウィンドウ
+function showDialog(_dialogTitle, _dialogContent) {
+  var dialogTitle = _dialogTitle || "タイトル";
+  var dialogContent = _dialogContent || "内容";
+  
+  // モーダルウィンドウを表示
+  $("#modalDialog").html( dialogContent );
+  $("#modalDialog").dialog({
+    modal: true,
+    title: dialogTitle
+  });
+}
+
+// ----------------------------------------------------------------
 // 確認モーダルウィンドウ
 function showConfirmDialog(_dialogTitle, _dialogContent, _callbackFunction) {
   var dialogTitle = _dialogTitle || "確認";
@@ -435,8 +652,8 @@ function showConfirmDialog(_dialogTitle, _dialogContent, _callbackFunction) {
   var callbackFunction = _callbackFunction || function(){};
   
   // モーダルウィンドウを表示
-  $("#modalDialog").text( dialogContent );
-  $("#modalDialog").dialog({
+  $("#modalConfirmDialog").html( dialogContent );
+  $("#modalConfirmDialog").dialog({
     modal: true,
     title: dialogTitle,
     buttons: {
@@ -469,4 +686,69 @@ function initializeLocalStorage(_initializeFlg) {
     localStorage.clear();
     
   }
+}
+
+// ----------------------------------------------------------------
+// 実績リストの初期化
+function clearAchievementList() {
+  achievementList = [];
+}
+
+// ----------------------------------------------------------------
+// 実績リストに実績を追加
+function addAchievementItem(_achievementName, _achievementAchieved, _achievementTimestamp, _achievementDescription, _achievementCount) {
+  achievementName = _achievementName || "Name";
+  achievementAchieved = _achievementAchieved || "f";
+  achievementTimestamp = _achievementTimestamp || "Lock";
+  achievementDescription = _achievementDescription || "Description";
+  achievementCount = _achievementCount || 0;
+  
+  // ローカルストレージからメモとチェック状況を読み込み
+  var tempKey = "";
+  tempKey += "steamAchievementManagerAchievementItem";
+  tempKey += "-" + appname;
+  tempKey += "-" + profilename;
+  tempKey += "-" + achievementCount;
+  
+  // メモ
+  var localStorageAchievementItemMemoKey = tempKey + "-memo";
+  
+  var localStorageAchievementItemMemoValue = localStorage.getItem(localStorageAchievementItemMemoKey);
+  if (localStorageAchievementItemMemoValue === null) {
+    localStorageAchievementItemMemoValue = "";
+  }
+  
+  // チェック
+  var localStorageAchievementItemCheckKey = tempKey + "-check";
+  
+  var localStorageAchievementItemCheckValue = localStorage.getItem(localStorageAchievementItemCheckKey);
+  if (localStorageAchievementItemCheckValue === null) {
+    localStorageAchievementItemCheckValue = "fffff";
+  }
+  var check1 = localStorageAchievementItemCheckValue.substring(1,1);
+  var check2 = localStorageAchievementItemCheckValue.substring(2,1);
+  var check3 = localStorageAchievementItemCheckValue.substring(3,1);
+  var check4 = localStorageAchievementItemCheckValue.substring(4,1);
+  var check5 = localStorageAchievementItemCheckValue.substring(5,1);
+  
+  // 追加・更新
+  achievementList[achievementCount] = {
+    "name": achievementName,
+    "achieved": achievementAchieved,
+    "unlockTimestamp": achievementTimestamp,
+    "description": achievementDescription,
+    "memo": localStorageAchievementItemMemoValue,
+    "check1": check1,
+    "check2": check2,
+    "check3": check3,
+    "check4": check4,
+    "check5": check5
+  };
+  
+}
+
+// ----------------------------------------------------------------
+// true false をスイッチ
+function toggleBoolean(_bool) {
+  return !_bool;
 }

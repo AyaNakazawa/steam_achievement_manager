@@ -15,30 +15,29 @@
       <h1><a href="" id="title">Steam Achievement Manager</a></h1>
     </header>
     <nav class="navbar navbar-inverse">
-    	<div class="container-fluid">
-    		<div class="navbar-header">
-    			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarTop">
-    				<span class="sr-only">Toggle navigation</span>
-    				<span class="icon-bar"></span>
-    				<span class="icon-bar"></span>
-    				<span class="icon-bar"></span>
-    				<span class="icon-bar"></span>
-    			</button>
-    		</div>
-    		
-    		<div class="collapse navbar-collapse" id="navbarTop">
-    			<ul class="nav navbar-nav">
-    				<li class="action-reset"><a><i class="fa fa-times" aria-hidden="true"></i> View Reset</a></li>
-    				<li class="dropdown action-history">
-  						<a href="#" class="dropdown-toggle action-history-header" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-server" aria-hidden="true"></i> History <span class="caret"></span></a>
-  						<ul class="dropdown-menu action-history-list" role="menu">
-  						</ul>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbarTop">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+        </div>
+        <div class="collapse navbar-collapse" id="navbarTop">
+          <ul class="nav navbar-nav">
+            <li class="action-reset"><a><i class="fa fa-times" aria-hidden="true"></i> View Reset</a></li>
+            <li class="dropdown action-history">
+              <a href="#" class="dropdown-toggle action-history-header" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-server" aria-hidden="true"></i> History <span class="caret"></span></a>
+              <ul class="dropdown-menu action-history-list" role="menu">
+              </ul>
             </li>
-    				<li class="action-reload"><a><i class="glyphicon glyphicon-refresh"></i> Reload</a></li>
-    				<li class="action-localStorage-reset"><a><i class="fa fa-times" aria-hidden="true"></i> Storage Reset</a></li>
-    			</ul>
-    		</div>
-    	</div>
+            <li class="action-reload"><a><i class="glyphicon glyphicon-refresh"></i> Reload</a></li>
+            <li class="action-localStorage-reset"><a><i class="fa fa-times" aria-hidden="true"></i> Storage Reset</a></li>
+            <li class="action-help"><a><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a></li>
+          </ul>
+        </div>
+      </div>
     </nav>
     <div class="container-fluid main">
       <div class="data-search-area">
@@ -47,10 +46,10 @@
             <!-- data-error-list -->
           </div>
           <div class="form-group data-form data-appname-text">
-            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="">
+            <input type="text" id="appname" placeholder="Please enter Game Name" class="form-control" value="payday2">
           </div>
           <div class="form-group data-form data-profilename-text">
-            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="">
+            <input type="text" id="profilename" placeholder="Please enter Profile Name" class="form-control" value="memoriamtk">
           </div>
           <div class="form-group data-form data-search-button">
             <button type="button" id="data-search-submit" class="btn btn-primary"><i class="fa fa-search" aria-hidden="true"></i> Search</button>
@@ -70,6 +69,7 @@
       </p>
     </footer>
     <div id="modalDialog"></div>
+    <div id="modalConfirmDialog"></div>
     <div class="debug"></div>
     
     <script src="js/jquery-3.2.0.js"></script>

@@ -177,6 +177,14 @@ header {
   margin: 0 auto;
 }
 
+.main > .achievement-area > .achievement-search-area > .achievement-search-form > .achievement-search-type > .dropdown-menu > li > a {
+  cursor: pointer;
+}
+
+.main > .achievement-area > .achievement-search-area > .achievement-search-result {
+  margin-top: 10px;
+}
+
 /* achievement-list */
 
 .main > .achievement-area > .achievement-list-area {
@@ -261,6 +269,10 @@ header {
   cursor: pointer;
 }
 
+.achievement-list-area .filtering {
+  display: none;
+}
+
 /* pagetop */
 
 .main > #pagetop {
@@ -296,6 +308,16 @@ footer {
   text-align: center;
   color: #8F98A0;
   margin-bottom: 30px;
+}
+
+/* other */
+
+#modalDialog {
+  text-align: left;
+}
+
+#modalConfirmDialog {
+  text-align: left;
 }
 
 /* medium */
