@@ -152,7 +152,7 @@ $(function() {
   // ----------------------------------------------------------------
   // 実績を検索
   $(document).on('change', '.achievement-search-text', function() {
-    // console.log("Change Achievement search text: " + $(this).val());
+    console.log("Change Achievement search text: " + $(this).val());
     
     var queryString = $(this).val();
     
@@ -338,22 +338,22 @@ function searchData(){
   deleteAchievementArea();
   
   // ajax ゲーム情報と実績を取得
-  $.get('php/getAchievementXML.php', {appname:appname, profilename:profilename}, function(data){
+  $.get('php/getAchievementXML.php', {appname:appname, profilename:profilename}, function(achievementXML){
     console.log("Get achievement xml");
     console.log("\t" + appname + " for " + profilename);
-    // console.log(data);
+    // console.log(achievementXML);
     
     // 準備
-    var achievements = $(data).find("achievements").find("achievement");
+    var achievements = $(achievementXML).find("achievements").find("achievement");
     var achievementsLength = achievements.length;
     
     // 存在確認
     if (achievementsLength === 0){
       console.log("Load faild");
       addDataError("実績情報の読み込みに失敗しました");
-      $.get('php/deleteAchievementXML.php', {appname:appname, profilename:profilename}, function(data){
+      $.get('php/deleteAchievementXML.php', {appname:appname, profilename:profilename}, function(deleteAchievementXML){
         
-        if (data) {
+        if (deleteAchievementXML) {
           console.log("Deleted local XML.");
         } else {
           console.log("Failed to delete local XML.");
@@ -374,27 +374,27 @@ function searchData(){
     clearAchievementList();
     
     // ゲーム名の表示
-    var gameName = $(data).find("game").find("gameName").text();
+    var gameName = $(achievementXML).find("game").find("gameName").text();
     $(".achievement-appname").text(gameName);
     
     // ゲームロゴの表示とリンク
-    var appIconPath = $(data).find("game").find("gameLogo").text();
-    var appLink = $(data).find("game").find("gameLink").text();
+    var appIconPath = $(achievementXML).find("game").find("gameLogo").text();
+    var appLink = $(achievementXML).find("game").find("gameLink").text();
     $(".achievement-appicon > img").attr("src", appIconPath);
     $(".achievement-appicon").attr("href", appLink);
     
     // ajax ユーザーを取得
-    $.get('php/getUserXML.php', {profilename:profilename}, function(data){
+    $.get('php/getUserXML.php', {profilename:profilename}, function(profileXML){
       console.log("Get user xml");
       console.log("\t" + profilename);
-      // console.log(data);
+      // console.log(profileXML);
       
       // ユーザー名の表示
-      var userName = $(data).find("steamID").text();
+      var userName = $(profileXML).find("steamID").text();
       $(".achievement-profilename").text(userName);
       
       // アバターの表示とリンク
-      var userIconPathList = $(data).find("avatarMedium");
+      var userIconPathList = $(profileXML).find("avatarMedium");
       var userIconPath = $(userIconPathList[0]).text();
       $(".achievement-usericon > img").attr("src", userIconPath);
       $(".achievement-usericon").attr("href", "http://steamcommunity.com/id/" + profilename);
@@ -415,6 +415,7 @@ function searchData(){
       
     });
     
+    // 結果を表示
     $(".achievement-search-result").text("Result: " + achievementCount);
     
     achievementCount = 0;
@@ -423,25 +424,27 @@ function searchData(){
     // ajax 実績画像を取得
     console.log("Get achievement image");
     achievements.each(function() {
-      $.get('php/getAchievementImage.php', {appname:appname, profilename:profilename, achievementCount:achievementCount, exitFlg:exitFlg}, function(data){
-        // console.log($(data).find("id").text() + ": " + data);
+      $.get('php/getAchievementImage.php', {appname:appname, profilename:profilename, achievementCount:achievementCount, exitFlg:exitFlg}, function(achievementItemXML){
+        // console.log($(achievementItemXML).find("id").text() + ": " + achievementItemXML);
         
         // アイコンパス
         var achievementItemIconPath;
-        if ($(data).find("closed").text() === "1") {
-          achievementItemIconPath = $(data).find("iconClosed").text();
+        if ($(achievementItemXML).find("closed").text() === "1") {
+          achievementItemIconPath = $(achievementItemXML).find("iconClosed").text();
         } else {
-          achievementItemIconPath = $(data).find("iconOpen").text();
+          achievementItemIconPath = $(achievementItemXML).find("iconOpen").text();
         }
         
-        // console.log($(data).find("id").text() + ": " + $(data).find("closed").text());
+        // console.log($(achievementItemXML).find("id").text() + ": " + $(achievementItemXML).find("closed").text());
         
-        var achievementItemId = $(data).find("id").text();
-        var achievementItemSelector = "#achievement-item-" + achievementItemId;
+        // achievementCount は非同期で先に回っちゃうから、
+        // 別にXML側に用意した achievementItemId を確保
+        var achievementItemId = $(achievementItemXML).find("id").text();
+        var achievementItemSelector = "#achievement-item-" + achievementItemId + " .achievement-item-icon";
         
         // アイコンを設定
-        $(achievementItemSelector + " .achievement-item-icon").attr("src", achievementItemIconPath);
-        $(achievementItemSelector + " .achievement-item-icon").attr("alt", "achievement icon");
+        $(achievementItemSelector).attr("src", achievementItemIconPath);
+        $(achievementItemSelector).attr("alt", "achievement icon");
         
       });
       
@@ -466,6 +469,8 @@ function filterAchievement(_queryString){
   var visibleAchievementCount = 0;
   
   var queryList = queryString.split(" ");
+  
+  console.log(queryList);
   
   // 実績ごとにフィルタリング
   $(achievementList).each(function() {
