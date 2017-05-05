@@ -36,6 +36,7 @@
             <li class="action-reload"><a><i class="glyphicon glyphicon-refresh"></i> Reload</a></li>
             <li class="action-localStorage-reset"><a><i class="fa fa-times" aria-hidden="true"></i> Storage Reset</a></li>
             <li class="action-help"><a><i class="fa fa-question-circle" aria-hidden="true"></i> Help</a></li>
+            <li class="action-input-switch"><a><i class="fa fa-minus-square-o"></i> Switch</a></li>
           </ul>
         </div>
       </div>
