@@ -453,12 +453,7 @@ function searchData(){
         // achievementCount は非同期で先に回っちゃうから、
         // 別にXML側に用意した achievementItemId を確保
         var achievementItemId = $(achievementItemXML).find("id").text();
-        var achievementItemSelector;
-        if (inputSwitchFlg) {
-          achievementItemSelector = "#achievement-item-" + achievementItemId + " .achievement-item-icon";
-        } else {
-          achievementItemSelector = "#achievement-item-" + achievementItemId + " .achievement-item-icon-is";
-        }
+        var achievementItemSelector = "#achievement-item-" + achievementItemId + " .achievement-item-icon";
         
         // アイコンを設定
         $(achievementItemSelector).attr("src", achievementItemIconPath);
@@ -736,7 +731,7 @@ function getHtmlAchievementItem(_achievementItem, _achievementCount) {
     return '<div class="achievement-item" id="achievement-item-' + achievementCount + '" data-id="' + achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + achievementTimestamp + '</p></div><p class="achievement-item-desc">' + achievementDescription + '</p><div class="achievement-item-edit-area"><div class="achievement-item-memo"><textarea rows="1" placeholder="Enter notes" class="form-control achievement-item-memo-text">' + localStorageAchievementItemMemoValue + '</textarea></div><div class="input-group achievement-item-checkboxes"><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-1"' + check1 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-2"' + check2 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-3"' + check3 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-4"' + check4 + '></label><label class="input-group-addon achievement-item-checkbox-area"><input type="checkbox" class="achievement-item-checkbox-5"' + check5 + '></label></div></div></div>';
   }
   
-  return '<div class="achievement-item-is" id="achievement-item-' + achievementCount + '" data-id="' + achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon-is"><div class="achievement-item-top-is"><h3 class="achievement-item-title-is">' + achievementName + '</h3><p class="achievement-item-timestamp-is">' + achievementTimestamp + '</p></div><p class="achievement-item-desc-is">' + achievementDescription + '</p></div>';
+  return '<div class="achievement-item" id="achievement-item-' + achievementCount + '" data-id="' + achievementCount + '"><img alt="achievement icon loading..." class="achievement-item-icon"><div class="achievement-item-top"><h3 class="achievement-item-title">' + achievementName + '</h3><p class="achievement-item-timestamp">' + achievementTimestamp + '</p></div><p class="achievement-item-desc-is">' + achievementDescription + '</p></div>';
   
 }
 
