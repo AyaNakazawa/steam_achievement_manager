@@ -273,6 +273,13 @@ header {
   display: none;
 }
 
+/* achievement area input switch */
+
+.achievement-item-desc-is {
+  color: #898989;
+  margin: 10px;
+}
+
 /* pagetop */
 
 .main > #pagetop {
