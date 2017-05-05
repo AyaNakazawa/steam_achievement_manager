@@ -275,7 +275,19 @@ header {
 
 /* achievement area input switch */
 
-.achievement-item-desc-is {
+.achievement-item-top > .achievement-item-title-is {
+  font-size: 24px;
+  color: #e1e1e1;
+  margin: 0;
+  text-align: center;
+}
+
+.achievement-item-top > .achievement-item-timestamp-is {
+  color: #898989;
+  text-align: right;
+}
+
+.achievement-item-top > .achievement-item-desc-is {
   color: #898989;
   margin: 10px;
 }
@@ -431,6 +443,31 @@ footer {
   .achievement-item-checkboxes {
     float: none;
     width: 240px;
+  }
+  
+  /* achievement area input switch */
+  
+  .achievement-item-top > .achievement-item-title-is {
+    float: left;
+    font-size: 18px;
+    color: #e1e1e1;
+    margin: 0;
+    text-align: center;
+    
+    width: 100%;
+    
+    margin-right: -184px;
+    padding-right: 184px;
+  }
+  
+  .achievement-item-top > .achievement-item-timestamp-is {
+    float: right;
+    color: #898989;
+    text-align: right;
+  }
+  
+  .achievement-item-top > .achievement-item-desc-is {
+    clear: both;
   }
   
 }
